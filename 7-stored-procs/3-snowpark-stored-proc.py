@@ -16,7 +16,7 @@ pars = {
 }
 session = Session.builder.configs(pars).create()
 
-@sproc(name="gen_fake_rows2",
+@sproc(name="gen_fake_rows_snowpark",
     replace=True,
     is_permanent=True,
     stage_location="@stage1",
@@ -34,9 +34,9 @@ def main(session: snowpark.Session, rows: int) -> DataFrame:
         StructField("EMAIL", StringType(), False)
     ])
     df = session.create_dataframe(output, schema)
-    df.write.mode("overwrite").save_as_table("customers_fake2")
+    df.write.mode("overwrite").save_as_table("customers_fake")
     return df
 
 
 #main(session, 1000)
-session.sql("call gen_fake_rows2(1000)").show()
+session.sql("call gen_fake_rows_snowpark(1000)").show()

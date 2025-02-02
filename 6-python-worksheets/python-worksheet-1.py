@@ -13,6 +13,5 @@ def main(session: snowpark.Session):
     
     schema = ["name", "address", "city", "state", "email", "age"]
     df = session.create_dataframe(output, schema=schema)
-    df = df.filter("age < 20").update({"age": 20})
     df.show()
     return df

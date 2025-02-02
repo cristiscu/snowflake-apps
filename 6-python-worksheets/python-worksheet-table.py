@@ -24,6 +24,5 @@ def main(session: snowpark.Session):
     ])
     df = session.create_dataframe(output, schema)
     df.write.mode("overwrite").save_as_table("customers_fake")
-    df = df.filter("AGE < 20").update({"AGE": 20})
     df.show()
     return df

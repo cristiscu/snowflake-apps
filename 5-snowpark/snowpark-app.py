@@ -1,4 +1,4 @@
-# after "pip install snowflake-snowpark-python"
+# after "pip install snowflake-snowpark-python[pandas]"
 
 import os
 from snowflake.snowpark import Session
@@ -21,5 +21,5 @@ query = 'select * from test.public.customers_fake limit 100'
 df = session.sql(query).to_pandas()
 print(df)
 
-df.hist(column="age", bins=10)
+df.hist(column="AGE", bins=10)
 plt.show()

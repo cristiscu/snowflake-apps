@@ -1,4 +1,4 @@
-# after "pip install snowflake-connector-python"
+# after "pip install snowflake-connector-python[pandas]"
 
 import os
 import snowflake.connector
@@ -21,5 +21,5 @@ cur.execute(query)
 df = cur.fetch_pandas_all()
 print(df)
 
-df.hist(column="age", bins=10)
+df.hist(column="AGE", bins=10)
 plt.show()
