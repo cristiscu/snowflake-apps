@@ -1,0 +1,17 @@
+manifest_version: 1
+
+artifacts:
+    default_streamlit: code.streamlit
+
+references:
+  - customers_fake:
+      label: "customers table"
+      description: "Customers table with fake realistic data"
+      privileges:
+        - SELECT
+        - INSERT
+        - DELETE
+        - UPDATE
+      object_type: Table 
+      multi_valued: false 
+      register_callback: code.update_reference
