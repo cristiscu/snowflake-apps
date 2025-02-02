@@ -1,4 +1,4 @@
-# add faker to Packages, in a new Streamlit App
+# add faker and matplotlib to Packages, in a new Streamlit App
 
 import streamlit as st
 from faker import Faker

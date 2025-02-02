@@ -28,15 +28,18 @@ create share fake_share;
 
 grant usage on database test to share fake_share;
 grant usage on schema test.public to share fake_share;
+-- cannot share Python UDFs
 grant usage on function test.public.get_fake_row(integer) to share fake_share;
 grant select on table test.public.customers_fake_view to share fake_share;
 
-alter share fake_share add accounts = YICTMGU.RXB41860;
+-- replace with your other account number
+alter share fake_share add accounts = YI......RXB.....;
 show shares;
 
 -- ==============================================================
 -- run from (paid) consumer account, w/ ACCOUNTADMIN
 -- after Data > Private Sharing > FAKE_SHARE in Direct Shares --> Get as DB_FAKE_SHARE database
+-- cannot share Python UDFs
 select * from table(db_fake_share.public.get_fake_row(50));
 
 select * from db_fake_share.public.customers_fake_view;
