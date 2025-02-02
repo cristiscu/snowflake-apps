@@ -1,5 +1,5 @@
 -- ====================================================
--- generate fake unrealistic data
+-- generate fake random data
 
 -- see https://docs.snowflake.com/en/sql-reference/functions/generator
 select 1

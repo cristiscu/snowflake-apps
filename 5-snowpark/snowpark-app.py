@@ -2,6 +2,7 @@
 
 import os
 from snowflake.snowpark import Session
+import matplotlib.pyplot as plt
 
 pars = {
     "account": os.environ['SNOWFLAKE_ACCOUNT'],
@@ -16,6 +17,9 @@ rows = session.sql(query).collect()
 for row in rows: print(row)
 
 # with Pandas DataFrame
-query = 'select * from test.public.customers_fake2 limit 100'
+query = 'select * from test.public.customers_fake limit 100'
 df = session.sql(query).to_pandas()
 print(df)
+
+df.hist(column="age", bins=10)
+plt.show()
