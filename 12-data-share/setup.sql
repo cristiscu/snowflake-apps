@@ -15,8 +15,12 @@ class FakeGen:
         for _ in range(num):
             yield (f.name(), f.address(), f.city(), f.state(), f.email())
 $$;
-
 select * from table(test.public.get_fake_row(100));
+
+create or replace secure view test.public.customers_fake_view
+as select *
+    from test.public.customers_fake
+    where age > 20;
 
 -- ==============================================================
 -- create share for the UDF + share w/ another paid account from the same org
@@ -25,6 +29,7 @@ create share fake_share;
 grant usage on database test to share fake_share;
 grant usage on schema test.public to share fake_share;
 grant usage on function test.public.get_fake_row(integer) to share fake_share;
+grant select on table test.public.customers_fake_view to share fake_share;
 
 alter share fake_share add accounts = YICTMGU.RXB41860;
 show shares;
@@ -33,3 +38,5 @@ show shares;
 -- run from (paid) consumer account, w/ ACCOUNTADMIN
 -- after Data > Private Sharing > FAKE_SHARE in Direct Shares --> Get as DB_FAKE_SHARE database
 select * from table(db_fake_share.public.get_fake_row(50));
+
+select * from db_fake_share.public.customers_fake_view;

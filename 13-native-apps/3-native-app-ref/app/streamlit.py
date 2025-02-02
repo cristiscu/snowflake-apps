@@ -1,7 +1,9 @@
 import streamlit as st
 from faker import Faker
+from random import randrange
+import matplotlib.pyplot as plt
 from snowflake.snowpark.context import get_active_session
-from snowflake.snowpark.types import StructType, StructField, StringType
+from snowflake.snowpark.types import StructType, StructField, StringType, IntegerType
 
 st.title("Fake Data Generator")
 st.caption("Generates fake and realistic data for a Customers table.")
@@ -20,7 +22,7 @@ if len(ref) == 0:
 # ==============================================
 
 f = Faker()
-output = [[f.name(), f.address(), f.city(), f.state(), f.email()]
+output = [[f.name(), f.address(), f.city(), f.state(), f.email(), 10 + randrange(70)]
     for _ in range(1000)]
 
 schema = StructType([ 
@@ -28,7 +30,8 @@ schema = StructType([
     StructField("ADDRESS", StringType(), False), 
     StructField("CITY", StringType(), False),  
     StructField("STATE", StringType(), False),  
-    StructField("EMAIL", StringType(), False)
+    StructField("EMAIL", StringType(), False),
+    StructField("AGE", IntegerType(), False)
 ])
 session = get_active_session()
 df = session.create_dataframe(output, schema)
@@ -38,7 +41,7 @@ df.write.mode("overwrite").save_as_table(customers_fake)
 tabs = st.tabs(["Generated Data", "Queried Data"])
 tabs[0].dataframe(df)
 
-# show Snowpark DataFrame
 query = f'select * from {customers_fake} limit 100'
-dfq = session.sql(query)
-tabs[1].dataframe(dfq)
+df = session.sql(query).to_pandas()
+df.hist(column="AGE", bins=10)
+tabs[1].pyplot(plt)

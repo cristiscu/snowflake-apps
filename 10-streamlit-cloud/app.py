@@ -1,7 +1,9 @@
 import streamlit as st
 from faker import Faker
+import matplotlib.pyplot as plt
+from random import randrange
 from snowflake.snowpark import Session
-from snowflake.snowpark.types import StructType, StructField, StringType
+from snowflake.snowpark.types import StructType, StructField, StringType, IntegerType
 
 st.title("Fake Data Generator and Inspector")
 st.caption("Generates and reads back fake and realistic data for a Customers table.")
@@ -12,7 +14,7 @@ with tabs[0]:
         account = st.text_input("Account:")
         user = st.text_input("User:")
         password = st.text_input("Password:", type="password")
-        tableName = st.text_input("Table Name:", value="customers_fake2")
+        tableName = st.text_input("Table Name:", value="customers_fake")
 
         if not st.form_submit_button("Connect"):
             st.stop()
@@ -33,7 +35,7 @@ with tabs[0]:
 
 with tabs[1]:
     f = Faker()
-    output = [[f.name(), f.address(), f.city(), f.state(), f.email()]
+    output = [[f.name(), f.address(), f.city(), f.state(), f.email(), 10 + randrange(70)]
         for _ in range(1000)]
 
     schema = StructType([ 
@@ -41,7 +43,8 @@ with tabs[1]:
         StructField("ADDRESS", StringType(), False), 
         StructField("CITY", StringType(), False),  
         StructField("STATE", StringType(), False),  
-        StructField("EMAIL", StringType(), False)
+        StructField("EMAIL", StringType(), False),
+        StructField("AGE", IntegerType(), False)
     ])
     df = session.create_dataframe(output, schema)
     df.write.mode("overwrite").save_as_table(tableName)
@@ -49,5 +52,6 @@ with tabs[1]:
 
 with tabs[2]:
     query = f'select * from {tableName} limit 100'
-    dfq = session.sql(query)
-    st.dataframe(dfq)
+    df = session.sql(query).to_pandas()
+    df.hist(column="AGE", bins=10)
+    st.pyplot(plt)

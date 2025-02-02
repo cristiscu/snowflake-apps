@@ -1,1 +1,1 @@
-tableName = "test.public.customers_fake2"
+tableName = "test.public.customers_fake"
