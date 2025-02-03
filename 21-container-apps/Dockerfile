@@ -1,4 +1,5 @@
 FROM python:3.10-slim-buster
 COPY app.py ./
-RUN pip install snowflake-snowpark-python[pandas], streamlit, matplotlib, faker
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
 CMD ["streamlit", "run", "app.py"]

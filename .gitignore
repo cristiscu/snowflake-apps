@@ -1,6 +1,7 @@
 dist/
 build/
 venv/
+.etc/
 
 *.log
 *.exe

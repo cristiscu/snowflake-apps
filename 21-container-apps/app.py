@@ -1,4 +1,4 @@
-# to be implemented as a job service
+# to be implemented as a service or job
 
 import streamlit as st
 from faker import Faker

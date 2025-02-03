@@ -3,7 +3,9 @@ USE test.public;
 
 -- ================================================
 -- create image repo (cannot drop single images)
+-- DROP IMAGE REPOSITORY IF EXISTS repo;
 CREATE IMAGE REPOSITORY IF NOT EXISTS repo;
+
 SHOW IMAGE REPOSITORIES;                    -- get repo URL
 SHOW IMAGES IN IMAGE REPOSITORY repo;       -- call after pushing images here
 
@@ -29,9 +31,33 @@ grant ALL on warehouse compute_wh to role SYSADMIN;
 grant READ on image repository test.public.repo to role SYSADMIN;
 grant USAGE, OPERATE on compute pool cpu1 to role SYSADMIN;
 
+USE ROLE SYSADMIN;
+
+-- ==============================================
+-- create long-running service
+CREATE SERVICE fake_service
+    IN COMPUTE POOL cpu1
+    FROM SPECIFICATION $$
+        spec:
+          containers:
+          - name: fake-job-cont
+            image: /test/public/repo/fake-job
+          endpoints:
+          - name: fake-job-ep
+            port: 8501
+            public: true
+    $$
+    MIN_INSTANCES=1
+    MAX_INSTANCES=1;
+DESC SERVICE fake_service;
+SHOW SERVICE INSTANCES IN SERVICE fake_service;
+SHOW SERVICE CONTAINERS IN SERVICE fake_service;
+
+-- go to ingress_url
+SHOW ENDPOINTS IN SERVICE fake_service;
+
 -- ================================================
 -- create job service
-USE ROLE SYSADMIN;
 EXECUTE JOB SERVICE
     IN COMPUTE POOL cpu1
     FROM SPECIFICATION $$
@@ -53,8 +79,15 @@ SELECT SYSTEM$GET_SERVICE_LOGS('fake_job', 0, 'fake-job-cont')
 
 -- ================================================
 -- stop all processing
+
+ALTER SERVICE fake_service SUSPEND;
+DROP SERVICE fake_service;
+
 ALTER SERVICE fake_job SUSPEND;
 DROP SERVICE fake_job;
 
+SHOW SERVICES;
+
 ALTER COMPUTE POOL cpu1 SUSPEND;
 SHOW COMPUTE POOLS;
+
