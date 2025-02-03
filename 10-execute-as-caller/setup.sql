@@ -6,7 +6,7 @@ create or replace procedure test.public.gen_fake_rows_caller(r integer)
     runtime_version = 3.9
     packages =('faker', 'snowflake-snowpark-python')
     handler = 'main'
-    execute as caller -- owner by default!
+    execute as caller       -- execute as owner by default!
 as $$
 import snowflake.snowpark as snowpark
 from faker import Faker

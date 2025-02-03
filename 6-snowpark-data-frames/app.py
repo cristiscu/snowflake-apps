@@ -1,4 +1,4 @@
-# run from a VSCode Terminal with "python 2-snowpark-to-table.py"
+# run from a VSCode Terminal with "python app.py"
 
 from faker import Faker
 import os

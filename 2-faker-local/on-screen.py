@@ -1,5 +1,5 @@
 # generates 1K rows client-side with fake but realistic test synthetic data
-# run from a VSCode Terminal with "python 1-on-screen.py"
+# run from a VSCode Terminal with "python on-screen.py"
 
 from faker import Faker
 import pandas as pd
