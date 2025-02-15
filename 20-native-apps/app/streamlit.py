@@ -18,5 +18,5 @@ df = get_active_session().create_dataframe(output, schema)
 tabG.dataframe(df)
 
 df = pd.DataFrame(df.collect())
-df.hist(column="age", bins=10)
+df.hist(column="AGE", bins=10)
 tabQ.pyplot(plt)
